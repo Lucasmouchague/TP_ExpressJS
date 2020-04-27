@@ -7,14 +7,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get("/cve/add", function(req, res) 
 {
-    res.sendFile('index.html', { root: __dirname });
+    res.sendFile('html_page/add.html', { root: __dirname });
 });
 
-app.get("/cve/:id/edit", function(req, res) 
-{
-	const id = parseInt(req.params.id)
-    //res.sendFile('index.html', { root: __dirname });
-});
 
 app.post("/cve", function(req, res) 
 {
@@ -51,7 +46,7 @@ app.delete('/cve/:id', (req, res) => {
       		return res.send(err)
     	});
 });
-app.patch('/cve/edit/:id', (req, res) => {
+app.update('/cve/edit/:id', (req, res) => {
 	const id = parseInt(req.params.id)
 	return db.Faille.findByPk(id)
 	.then((failles) => {
