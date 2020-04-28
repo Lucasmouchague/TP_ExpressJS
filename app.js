@@ -20,13 +20,50 @@ app.get("/cve/edit", function(req, res)
 	res.sendFile('html_page/edit_id.html', {root: __dirname});
 });
 
-
+//delete with web in /cve/delete using the id of the cve
 app.post("/delete/cve", function(req, res) 
 {
-	let id = req.body.id
-	res.redirect('127.0.0.1:3000/cve/delete/'+id)
+	const id = parseInt(req.body.id)
+   	return db.Faille.findByPk(id)
+		.then((failles) => failles.destroy())
+		.then(() => res.send({ id }))
+    	.catch((err) => {
+      		console.log('Error deleting cve whith id = '+id+' ', JSON.stringify(err))
+      		return res.send(err)
+    	});
 });
-	
+
+
+
+app.get('/cve', (req, res) => {
+	return db.Faille.findAll()
+	  .then((failles) => res.send(failles))
+	  .catch((err) => {
+		console.log('There was an error querying cve', JSON.stringify(err))
+		return res.send(err)
+	  });
+  });
+
+  
+
+  app.post("/edit/cve", function(req, res) 
+  {
+	const id = parseInt(req.body.id)
+	return db.Faille.findByPk(id)
+	.then((failles) => {
+		const { name, type, score, description } = req.body
+		return failles.update({ name, type, score, description })
+		.then(() => res.send(failles))
+		.catch((err) => {
+			console.log("Error while updating cve score with id = "+id+" ", JSON.stringify(err))
+			res.status(400).send(err)
+		})
+	})
+});
+
+
+
+
 app.post("/cve", function(req, res) 
 {
 	let name = req.body.name
@@ -52,7 +89,7 @@ app.get('/cve/:id', (req, res) => {
       		return res.send(err)
     	});
 });
-
+// delete with method delete with postmant
 app.delete('/cve/delete/:id', (req, res) => {
 	const id = parseInt(req.params.id)
    	return db.Faille.findByPk(id)
