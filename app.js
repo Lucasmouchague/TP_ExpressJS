@@ -5,19 +5,28 @@ const db = require('./models');
 const methodOverride = require('method-override');
 app.use(methodOverride('X-HTTP-Method-Override'))
 app.use(bodyParser.urlencoded({ extended: false }))
+app.engine('html', require('ejs').renderFile);
+app.set('views', __dirname + '/html_page/');
+app.set('view engine', 'html');
 //routes(app);
 
 app.get("/cve/add", function(req, res) 
 {
-    res.sendFile('html_page/add.html', { root: __dirname });
+	header = req.headers['accept']
+	if (header == 'application/json') 
+	{
+		res.redirect('/cve')
+	} else {
+		res.render('add.html', { root: __dirname });
+	}
 });
 app.get("/cve/delete", function(req, res)
 {
-	res.sendFile('html_page/delete_id.html', {root: __dirname});
+	res.render('delete_id.html', {root: __dirname});
 });
 app.get("/cve/edit", function(req, res)
 {
-	res.sendFile('html_page/edit_id.html', {root: __dirname});
+	res.render('edit_id.html', {root: __dirname});
 });
 
 //delete with web in /cve/delete using the id of the cve
@@ -36,6 +45,18 @@ app.post("/delete/cve", function(req, res)
 
 
 app.get('/cve', (req, res) => {
+	header = req.headers['accept']
+	if (header == 'application/json')
+	{
+		return db.Faille.findAll()
+		.then((failles) => res.send(failles))
+		.catch((err) => {
+		  console.log('There was an error querying cve', JSON.stringify(err))
+		  return res.send(err)
+		});
+	} else {
+		res.render('display.html', { root: __dirname });
+	}
 	return db.Faille.findAll()
 	  .then((failles) => res.send(failles))
 	  .catch((err) => {
@@ -48,6 +69,7 @@ app.get('/cve', (req, res) => {
 
   app.post("/edit/cve", function(req, res) 
   {
+	
 	const id = parseInt(req.body.id)
 	return db.Faille.findByPk(id)
 	.then((failles) => {
@@ -114,6 +136,9 @@ app.patch('/cve/edit/:id', (req, res) => {
 		})
 	})
 });
+
+
+
 app.use(function(req, res) 
 {
 	res.send("404 not found");
