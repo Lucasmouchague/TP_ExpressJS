@@ -57,12 +57,6 @@ app.get('/cve', (req, res) => {
 	} else {
 		res.render('display.html', { root: __dirname });
 	}
-	return db.Faille.findAll()
-	  .then((failles) => res.send(failles))
-	  .catch((err) => {
-		console.log('There was an error querying cve', JSON.stringify(err))
-		return res.send(err)
-	  });
   });
 
   
