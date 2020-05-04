@@ -9,25 +9,25 @@
 <body>
 <div id="id01" >
     <script>
-        const Cves = () => {
+        const Users = () => {
             const xhttp = new XMLHttpRequest();
     
-            xhttp.open("GET", "http://localhost:3000/cve", false);
+            xhttp.open("GET", "http://localhost:3000/Users", false);
             xhttp.setRequestHeader('accept', 'application/json');
             xhttp.send();
             
     
-            const cves = JSON.parse(xhttp.responseText);
+            const users = JSON.parse(xhttp.responseText);
     
             let out = "";
             let i;
-            for( i = 0; i < cves.length; i++) 
+            for( i = 0; i < users.length; i++) 
             {
-                out += '<table id="id01" class="table table-striped"><thead><tr><th>Name</th><th>Type</th><th>Score</th><th>Description</th><th>id</th></tr></thead><tbody><tr><td>' + cves[i].name + '</td><td>' + cves[i].type + '</td><td>' + cves[i].score + '</td><td>' + cves[i].description + '</td><td>' + cves[i].id +'</tr></tbody></table>'
+                out += '<table id="id01" class="table table-striped"><thead><tr><th>Username</th><th>Password</th><th>id</th></tr></thead><tbody><tr><td>' + users[i].name + '</td><td>' + users[i].password + '</td><td>'+ users[i].id +'</tr></tbody></table>'
             } 
             document.getElementById("id01").innerHTML = out;
         }
-        Cves();
+        Users();
       </script>    
 </div>
 </body>

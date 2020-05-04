@@ -54,13 +54,7 @@ app.post("/cve", function(req, res)
 
 app.get("/cve/add", function(req, res) 
 {
-	header = req.headers['accept']
-	if (header == 'application/json') 
-	{
-		res.redirect('/cve')
-	} else {
 		res.render('add.html', { root: __dirname });
-	}
 });
 
 app.get('/cve/:id', (req, res) => {
@@ -127,7 +121,6 @@ app.get('/cve', (req, res) => {
 
 app.post("/edit/cve", function(req, res) 
   {
-	
 	const id = parseInt(req.body.id)
 	return db.Faille.findByPk(id)
 	.then((failles) => {
@@ -168,16 +161,20 @@ app.delete('/delUsers/:id', (req, res) => {
     	});
 });
 
-app.get('/Users', (req, res) => {	
-	return db.User.findAll()
-	.then((users) => res.send(users))
-	.catch((err) => {
-	  console.log('There was an error querying user', JSON.stringify(err))
-	  return res.send(err)
-	})
+app.get('/Users', (req, res) => {
+	header = req.headers['accept']
+	if (header == 'application/json') {
+		return db.User.findAll()
+		.then((users) => res.send(users))
+		.catch((err) => {
+		  console.log('There was an error querying user', JSON.stringify(err))
+		  return res.send(err)
+		})
+	} else {
+		res.render('display_user.html', { root: __dirname });
+	}	
+
 });
-
-
 
 // app.post('/Users', function(req, res)
 // {
