@@ -125,6 +125,16 @@ app.patch('/cve/edit/:id', (req, res) => {
 	})
 });
 
+app.get("/Users/add", function(req, res)
+{
+	res.render('add_user.html', {root: __dirname});
+});
+
+app.get("/Users/delete", function(req, res)
+{
+	res.render('delete_user.html', {root: __dirname});
+});
+
 
 app.post("/addUsers", function(req, res) 
 {
@@ -152,6 +162,8 @@ app.delete('/delUsers/:id', (req, res) => {
       		return res.send(err)
     	});
 });
+
+
 
 app.get('/Users', (req, res) => {	
 	return db.User.findAll()
