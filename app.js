@@ -11,16 +11,17 @@ app.set('view engine', 'html');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-
-app.get("/cve/add", function(req, res) 
+app.get("/Users/add", function(req, res)
 {
-	header = req.headers['accept']
-	if (header == 'application/json') 
-	{
-		res.redirect('/cve')
-	} else {
-		res.render('add.html', { root: __dirname });
-	}
+	res.render('add_user.html', {root: __dirname});
+});
+app.get("/Users/delete", function(req, res)
+{
+	res.render('delete_user.html', {root: __dirname});
+});
+app.get('/sessions', function(req, res)
+{
+	res.render('sessions_login.html', {root: __dirname});
 });
 app.get("/cve/delete", function(req, res)
 {
@@ -31,49 +32,8 @@ app.get("/cve/edit", function(req, res)
 	res.render('edit_id.html', {root: __dirname});
 });
 
-app.post("/delete/cve", function(req, res) 
-{
-	const id = parseInt(req.body.id)
-   	return db.Faille.findByPk(id)
-		.then((failles) => failles.destroy())
-		.then(() => res.send({ id }))
-    	.catch((err) => {
-      		console.log('Error deleting cve whith id = '+id+' ', JSON.stringify(err))
-      		return res.send(err)
-    	});
-});
-
-
-
-app.get('/cve', (req, res) => {
-	header = req.headers['accept']
-	if (header == 'application/json')
-	{
-		return db.Faille.findAll()
-		.then((failles) => res.send(failles))
-		.catch((err) => {
-		  console.log('There was an error querying cve', JSON.stringify(err))
-		  return res.send(err)
-		});
-	} else {
-		res.render('display.html', { root: __dirname });
-	}
-  });
-
-app.post("/edit/cve", function(req, res) 
-  {
-	
-	const id = parseInt(req.body.id)
-	return db.Faille.findByPk(id)
-	.then((failles) => {
-		const { name, type, score, description } = req.body
-		return failles.update({ name, type, score, description })
-		.then(() => res.send(failles))
-		.catch((err) => {
-			console.log("Error while updating cve score with id = "+id+" ", JSON.stringify(err))
-			res.status(400).send(err)
-		})
-	})
+app.get('/', function(req, res){
+	res.redirect('/cve')
 });
 
 app.post("/cve", function(req, res) 
@@ -91,6 +51,18 @@ app.post("/cve", function(req, res)
 		})
 });
 
+
+app.get("/cve/add", function(req, res) 
+{
+	header = req.headers['accept']
+	if (header == 'application/json') 
+	{
+		res.redirect('/cve')
+	} else {
+		res.render('add.html', { root: __dirname });
+	}
+});
+
 app.get('/cve/:id', (req, res) => {
 	const id = parseInt(req.params.id)
    	return db.Faille.findByPk(id)
@@ -100,7 +72,20 @@ app.get('/cve/:id', (req, res) => {
       		return res.send(err)
     	});
 });
-app.delete('/cve/delete/:id', (req, res) => {
+
+app.post("/delete/cve", function(req, res) 
+{
+	const id = parseInt(req.body.id)
+   	return db.Faille.findByPk(id)
+		.then((failles) => failles.destroy())
+		.then(() => res.send({ id }))
+    	.catch((err) => {
+      		console.log('Error deleting cve whith id = '+id+' ', JSON.stringify(err))
+      		return res.send(err)
+    	});
+});
+
+app.delete('/deleteCve/:id', (req, res) => {
 	const id = parseInt(req.params.id)
    	return db.Faille.findByPk(id)
 		.then((failles) => failles.destroy())
@@ -111,7 +96,7 @@ app.delete('/cve/delete/:id', (req, res) => {
     	});
 });
 
-app.patch('/cve/edit/:id', (req, res) => {
+app.patch('/editCve/:id', (req, res) => {
 	const id = parseInt(req.params.id)
 	return db.Faille.findByPk(id)
 	.then((failles) => {
@@ -125,16 +110,36 @@ app.patch('/cve/edit/:id', (req, res) => {
 	})
 });
 
-app.get("/Users/add", function(req, res)
-{
-	res.render('add_user.html', {root: __dirname});
+app.get('/cve', (req, res) => {
+	header = req.headers['accept']
+	if (header == 'application/json')
+	{
+		return db.Faille.findAll()
+		.then((failles) => res.send(failles))
+		.catch((err) => {
+		  console.log('There was an error querying cve', JSON.stringify(err))
+		  return res.send(err)
+		});
+	} else {
+		res.render('display.html', { root: __dirname });
+	}
 });
 
-app.get("/Users/delete", function(req, res)
-{
-	res.render('delete_user.html', {root: __dirname});
+app.post("/edit/cve", function(req, res) 
+  {
+	
+	const id = parseInt(req.body.id)
+	return db.Faille.findByPk(id)
+	.then((failles) => {
+		const { name, type, score, description } = req.body
+		return failles.update({ name, type, score, description })
+		.then(() => res.send(failles))
+		.catch((err) => {
+			console.log("Error while updating cve score with id = "+id+" ", JSON.stringify(err))
+			res.status(400).send(err)
+		})
+	})
 });
-
 
 app.post("/addUsers", function(req, res) 
 {
@@ -163,8 +168,6 @@ app.delete('/delUsers/:id', (req, res) => {
     	});
 });
 
-
-
 app.get('/Users', (req, res) => {	
 	return db.User.findAll()
 	.then((users) => res.send(users))
@@ -174,38 +177,35 @@ app.get('/Users', (req, res) => {
 	})
 });
 
-app.get('/sessions', function(req, res)
-{
-	res.render('sessions_login.html', {root: __dirname});
-});
 
-app.post('/Users', function(req, res)
-{
-	let name =  req.body.name
-	let userpassword =  req.body.password
 
-	new User({ name: name}).fecth().then(function(found){
-		if (found){
-			console.log("username found")
+// app.post('/Users', function(req, res)
+// {
+// 	let name =  req.body.name
+// 	let userpassword =  req.body.password
 
-			bcrypt.compare(userpassword, found.get('password'), function(err, res){
-				if (res){
-					req.session.regenerate(function(){
-						console.log('password match')
-						Response.redirect('/cve')
-						req.session.found = found.name;
-					});
-				} else {
-					console.log("password did not match")
-					Response.redirect('/sessions')
-				}
-			})
-		} else {
-			console.log("password did not match")
-			Response.redirect('/sessions')
-		}
-	})
-});
+// 	new User({ name: name}).fecth().then(function(found){
+// 		if (found){
+// 			console.log("username found")
+
+// 			bcrypt.compare(userpassword, found.get('password'), function(err, res){
+// 				if (res){
+// 					req.session.regenerate(function(){
+// 						console.log('password match')
+// 						Response.redirect('/cve')
+// 						req.session.found = found.name;
+// 					});
+// 				} else {
+// 					console.log("password did not match")
+// 					Response.redirect('/sessions')
+// 				}
+// 			})
+// 		} else {
+// 			console.log("password did not match")
+// 			Response.redirect('/sessions')
+// 		}
+// 	})
+// });
 
 
 app.use(function(req, res) 
