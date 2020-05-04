@@ -8,7 +8,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.engine('html', require('ejs').renderFile);
 app.set('views', __dirname + '/html_page/');
 app.set('view engine', 'html');
-//routes(app);
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 app.get("/cve/add", function(req, res) 
 {
@@ -29,7 +31,6 @@ app.get("/cve/edit", function(req, res)
 	res.render('edit_id.html', {root: __dirname});
 });
 
-//delete with web in /cve/delete using the id of the cve
 app.post("/delete/cve", function(req, res) 
 {
 	const id = parseInt(req.body.id)
@@ -59,9 +60,7 @@ app.get('/cve', (req, res) => {
 	}
   });
 
-  
-
-  app.post("/edit/cve", function(req, res) 
+app.post("/edit/cve", function(req, res) 
   {
 	
 	const id = parseInt(req.body.id)
@@ -77,16 +76,12 @@ app.get('/cve', (req, res) => {
 	})
 });
 
-
-
-
 app.post("/cve", function(req, res) 
 {
 	let name = req.body.name
 	let type = req.body.type
 	let score = req.body.score
 	let description = req.body.description
-	//const { name, type, score, description } = req.body
 	return db.Faille.create({ name, type, score, description })
 		.then((failles) => res.send(failles))
 		.catch((err) => {
@@ -105,7 +100,6 @@ app.get('/cve/:id', (req, res) => {
       		return res.send(err)
     	});
 });
-// delete with method delete with postmant
 app.delete('/cve/delete/:id', (req, res) => {
 	const id = parseInt(req.params.id)
    	return db.Faille.findByPk(id)
@@ -135,12 +129,15 @@ app.patch('/cve/edit/:id', (req, res) => {
 app.post("/addUsers", function(req, res) 
 {
 	let name = req.body.name
-	let password = req.body.password
+	let clearpassword = req.body.password
+	const salt = bcrypt.genSaltSync(saltRounds);
+	const password = bcrypt.hashSync(clearpassword, salt);
+	console.log(password)
 	return db.User.create({ name, password })
 		.then((users) => res.send(users))
 		.catch((err) => {
 			console.log(res.status(400).send(err))
-			console.log('There is an error creating cve, with name = '+name+', type ='+password+'')
+			console.log('There is an error creating cve, with name = '+name+', type ='+hash+'', JSON.stringify(err))
 			return res.status(400).send(err)
 		})
 });
