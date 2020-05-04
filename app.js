@@ -132,6 +132,39 @@ app.patch('/cve/edit/:id', (req, res) => {
 });
 
 
+app.post("/addUsers", function(req, res) 
+{
+	let name = req.body.name
+	let password = req.body.password
+	return db.User.create({ name, password })
+		.then((users) => res.send(users))
+		.catch((err) => {
+			console.log(res.status(400).send(err))
+			console.log('There is an error creating cve, with name = '+name+', type ='+password+'')
+			return res.status(400).send(err)
+		})
+});
+
+app.delete('/delUsers/:id', (req, res) => {
+	const id = parseInt(req.params.id)
+   	return db.User.findByPk(id)
+		.then((users) => users.destroy())
+		.then(() => res.send({ id }))
+    	.catch((err) => {
+      		console.log('Error deleting user whith id = '+id+' ', JSON.stringify(err))
+      		return res.send(err)
+    	});
+});
+
+app.get('/Users', (req, res) => {	
+	return db.User.findAll()
+	.then((users) => res.send(users))
+	.catch((err) => {
+	  console.log('There was an error querying user', JSON.stringify(err))
+	  return res.send(err)
+	})
+});
+
 
 app.use(function(req, res) 
 {
