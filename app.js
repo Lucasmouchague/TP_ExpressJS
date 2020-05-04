@@ -162,12 +162,44 @@ app.get('/Users', (req, res) => {
 	})
 });
 
+app.get('/sessions', function(req, res)
+{
+	res.render('sessions_login.html', {root: __dirname});
+});
+
+app.post('/Users', function(req, res)
+{
+	let name =  req.body.name
+	let userpassword =  req.body.password
+
+	new User({ name: name}).fecth().then(function(found){
+		if (found){
+			console.log("username found")
+
+			bcrypt.compare(userpassword, found.get('password'), function(err, res){
+				if (res){
+					req.session.regenerate(function(){
+						console.log('password match')
+						Response.redirect('/cve')
+						req.session.found = found.name;
+					});
+				} else {
+					console.log("password did not match")
+					Response.redirect('/sessions')
+				}
+			})
+		} else {
+			console.log("password did not match")
+			Response.redirect('/sessions')
+		}
+	})
+});
+
 
 app.use(function(req, res) 
 {
 	res.send("404 not found");
 });
-
 
 var server = app.listen(3000, function () {
     console.log("app running on port ", server.address().port);
