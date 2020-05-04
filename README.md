@@ -1,4 +1,5 @@
 # TP_ExpressJS
+Notre API permet d'ajouter d'éditer de supprimer et de voir des CVE présente dans la base de données tout ça en format JSON ou HTML.
 ## Installation :
 Prérequis :
 ```
