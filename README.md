@@ -17,7 +17,7 @@ npm install
 node app.js
 ```
 ### Routes :
-|||
+|methode|route (description)|
 |---|---|
 |get    | /  (redirige vers /cve)|
 |post   |/cve   (permet d'ajouter une CVE)|
