@@ -176,6 +176,38 @@ app.get('/Users', (req, res) => {
 
 });
 
+
+
+
+
+
+
+
+//const authTokens = {};
+
+//app.post('/login', (req, res) => {
+ //   const { email, password } = req.body;
+//    const hashedPassword = getHashedPassword(password);
+
+//    const user = users.find(u => {
+  //      return u.email === email && hashedPassword === u.password
+//    });
+
+//    if (user) {
+//        const authToken = generateAuthToken();
+
+//        authTokens[authToken] = user;
+
+//        res.cookie('AuthToken', authToken);
+
+//        res.redirect('/protected');
+//    } else {
+//        res.render('login', {
+//            message: 'Invalid username or password',
+//            messageClass: 'alert-danger'
+//        });
+//    }
+//});
 // app.post('/Users', function(req, res)
 // {
 // 	let name =  req.body.name
